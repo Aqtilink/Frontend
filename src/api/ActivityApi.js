@@ -35,5 +35,18 @@ export function useActivityApi() {
     return res.data;
   };
 
-  return { getFeed, joinActivity, createActivity };
+  return { 
+    getFeed, 
+    getFriendsFeed,
+    getJoinedActivities: async () => {
+      const res = await api.get("/joined");
+      return res.data;
+    },
+    getUserActivities: async () => {
+      const res = await api.get("/user");
+      return res.data;
+    },
+    joinActivity, 
+    createActivity 
+  };
 }

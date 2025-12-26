@@ -1,8 +1,10 @@
+import { act } from "react";
 import "./ActivityCard.css";
 import { useState } from "react";
 
 export default function ActivityCard({ activity, currentUserId, onJoin }) {
-  const alreadyJoined = activity.participants?.some(p => p.id === currentUserId);
+  const isOwner = activity.ownerId === currentUserId;
+  const alreadyJoined = activity.participants?.some(p => p.id === currentUserId) || isOwner;
   const isPast = new Date(activity.startTime) < new Date();
 
   const [showParticipants, setShowParticipants] = useState(false);
@@ -15,30 +17,51 @@ export default function ActivityCard({ activity, currentUserId, onJoin }) {
 
   return (
     <div className={cardClass}>
-      <h3>{activity.title}</h3>
+      <div className="title-with-type">
+        <h3>{activity.title}</h3>
+        {activity.sportType && <span className="activity-type">{activity.sportType}</span>}
+      </div>
       <p>Owner: {activity.ownerName || "Unknown"}</p>
       <p>{activity.location}</p>
       <p>{new Date(activity.startTime).toLocaleString()}</p>
 
-      <div
-        className="participants-widget"
-        onMouseEnter={() => setShowParticipants(true)}
-        onMouseLeave={() => setShowParticipants(false)}
-      >
-        Participants: {activity.participants.length}
-        {showParticipants && (
-          <div className="participants-popup">
-            {activity.participants.map(p => `${p.firstName} ${p.lastName}`).join(", ")}
+      <div style={{ display: "flex", alignItems: "center", marginTop: "8px", gap: "30px" }}>
+        <div
+          className="participants-widget"
+          onMouseEnter={() => setShowParticipants(true)}
+          onMouseLeave={() => setShowParticipants(false)}
+        >
+          Participants: {activity.participants.length}
+          {showParticipants && (
+            <div className="participants-popup">
+              {activity.participants.map(p => `${p.firstName} ${p.lastName}`).join(", ")}
+            </div>
+          )}
+        </div>
+
+        {isOwner ? (
+          <div style={{ 
+            background: "transparent", 
+            border: "2px solid #2563eb",
+            borderRadius: "12px",
+            padding: "0.6rem 1rem",
+            fontWeight: 700,
+            fontSize: "0.9rem",
+            textAlign: "center",
+            color: "#2563eb",
+            marginLeft: "30px"
+          }}>
+            Owner
           </div>
+        ) : (
+          <button className="join"
+            disabled={alreadyJoined || isPast}
+            onClick={() => onJoin(activity.id)}
+          >
+            {alreadyJoined ? "✓ Joined" : isPast ? "Finished" : "Join"}
+          </button>
         )}
       </div>
-
-      <button
-        disabled={alreadyJoined || isPast}
-        onClick={() => onJoin(activity.id)}
-      >
-        {alreadyJoined ? "Joined" : isPast ? "Finished" : "Join"}
-      </button>
     </div>
   );
 }

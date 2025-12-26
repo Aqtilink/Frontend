@@ -1,8 +1,10 @@
 body {
 	margin: 0;
 	font-family: "Inter", system-ui, -apple-system, sans-serif;
-	background: #f4f7fb;
+	background: linear-gradient(135deg, rgba(240, 249, 255, 0.75) 0%, rgba(219, 234, 254, 0.75) 100%),
+				url('/background.JPG') center/cover fixed;
 	color: #0f172a;
+	min-height: 100vh;
 }
 
 .settings-page {
