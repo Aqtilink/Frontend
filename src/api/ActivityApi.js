@@ -5,7 +5,8 @@ export function useActivityApi() {
   const { getToken } = useAuth();
 
   const api = axios.create({
-    baseURL: "http://localhost:8081/api/v1/activities",
+    baseURL:
+      import.meta.env.VITE_ACTIVITY_API_URL || "http://localhost:8081/api/v1/activities",
   });
 
   // Automatically attach JWT to all requests

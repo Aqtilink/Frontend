@@ -2,7 +2,8 @@ import axios from "axios";
 import { useAuth } from "@clerk/clerk-react";
 
 const api = axios.create({
-  baseURL: "http://localhost:8081/api/v1",
+  // Allow overriding the backend URL at build time; fallback is local dev.
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8081/api/v1",
 });
 
 export function useApi() {

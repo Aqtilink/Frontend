@@ -55,8 +55,15 @@ export default function Settings() {
       city: (draft.city?.trim() || profile?.city || ""),
       email: (draft.email?.trim() || profile?.email || ""),
     };
-    const updated = await api.updateUser(user.id, payload);
-    setProfile(updated);
+    console.log("Updating user:", user.id, "with payload:", payload);
+    try {
+      const updated = await api.updateUser(user.id, payload);
+      console.log("Update successful:", updated);
+      setProfile(updated);
+    } catch (error) {
+      console.error("Update failed:", error);
+      alert("Failed to update profile: " + (error.response?.data?.message || error.message));
+    }
   };
 
   return (

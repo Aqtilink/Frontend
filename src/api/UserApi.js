@@ -5,7 +5,8 @@ export function useUserApi() {
   const { getToken } = useAuth();
 
   const api = axios.create({
-    baseURL: "http://localhost:8080/api/v1/users",
+    baseURL:
+      import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users",
   });
 
   api.interceptors.request.use(async (config) => {
@@ -38,8 +39,9 @@ export function useUserApi() {
     },
 
     sendFriendRequest: async (receiverId) => {
+      const base = (import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users").replace(/\/users$/, "");
       const res = await axios.post(
-        `http://localhost:8080/api/v1/friend-requests/send?receiverClerkId=${receiverId}`,
+        `${base}/friend-requests/send?receiverClerkId=${receiverId}`,
         null,
         {
           headers: {
@@ -51,8 +53,9 @@ export function useUserApi() {
     },
 
     getPendingRequests: async () => {
+      const base = (import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users").replace(/\/users$/, "");
       const res = await axios.get(
-        `http://localhost:8080/api/v1/friend-requests/pending`,
+        `${base}/friend-requests/pending`,
         {
           headers: {
             Authorization: `Bearer ${await getToken()}`
@@ -63,8 +66,9 @@ export function useUserApi() {
     },
 
     acceptFriendRequest: async (requestId) => {
+      const base = (import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users").replace(/\/users$/, "");
       await axios.post(
-        `http://localhost:8080/api/v1/friend-requests/${requestId}/accept`,
+        `${base}/friend-requests/${requestId}/accept`,
         null,
         {
           headers: {
@@ -75,8 +79,9 @@ export function useUserApi() {
     },
 
     rejectFriendRequest: async (requestId) => {
+      const base = (import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users").replace(/\/users$/, "");
       await axios.post(
-        `http://localhost:8080/api/v1/friend-requests/${requestId}/reject`,
+        `${base}/friend-requests/${requestId}/reject`,
         null,
         {
           headers: {
@@ -84,6 +89,10 @@ export function useUserApi() {
           }
         }
       );
+    },
+
+    deleteUser: async (id) => {
+      await api.delete(`/${id}`);
     },
   };
 }
