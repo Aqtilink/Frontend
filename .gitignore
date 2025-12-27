@@ -21,3 +21,6 @@ Thumbs.db
 # Logs
 *.log/target/
 .vscode/
+.env
+.env.example
+
