@@ -48,6 +48,7 @@ export function useActivityApi() {
       return res.data;
     },
     joinActivity, 
-    createActivity 
+    createActivity
+     
   };
 }
