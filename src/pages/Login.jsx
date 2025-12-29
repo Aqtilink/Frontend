@@ -13,9 +13,9 @@ export default function Login() {
       gap: "2rem"
     }}>
       <div>
-        <h1 style={{ fontSize: "3rem", margin: "0 0 0.5rem 0", fontWeight: 800 }}>Welcome to AqtiLink</h1>
+        <h1 style={{ fontSize: "3rem", margin: "0 0 0.5rem 0", fontWeight: 800 }}>Ljubim te Nejci</h1>
         <h2 style={{ fontSize: "1.5rem", margin: 0, fontWeight: 400, color: "#64748b" }}>
-          An app for lazy people that want to be active.
+          ZELO ZELO ZELO ZELO MUAH
         </h2>
       </div>
       <SignInButton mode="modal">
