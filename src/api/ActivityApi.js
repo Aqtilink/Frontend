@@ -1,8 +1,9 @@
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import axios from "axios";
 
 export function useActivityApi() {
   const { getToken } = useAuth();
+  const { user } = useUser();
 
   const api = axios.create({
     baseURL:
@@ -17,22 +18,30 @@ export function useActivityApi() {
     }
     return config;
   });
+  
   const getFeed = async () => {
-    const res = await api.get("/feed");
+    const res = await api.get("/all");
     return res.data;
   }
 
   const getFriendsFeed = async () => {
-    const res = await api.get("/friends-feed");
+    if (!user?.id) return [];
+    const res = await api.get(`/friends-feed/${user.id}`);
     return res.data;
   };
 
   const joinActivity = async (activityId) => {
-    await api.post(`/${activityId}/join`);
+    if (!user?.id) throw new Error("User not authenticated");
+    await api.post(`/${activityId}/join/${user.id}`);
   };
 
   const createActivity = async (payload) => {
-    const res = await api.post("/json", payload);
+    if (!user?.id) throw new Error("User not authenticated");
+    const activityPayload = {
+      ...payload,
+      ownerId: user.id,
+    };
+    const res = await api.post("/json", activityPayload);
     return res.data;
   };
 
@@ -40,11 +49,13 @@ export function useActivityApi() {
     getFeed, 
     getFriendsFeed,
     getJoinedActivities: async () => {
-      const res = await api.get("/joined");
+      if (!user?.id) return [];
+      const res = await api.get(`/joined/${user.id}`);
       return res.data;
     },
     getUserActivities: async () => {
-      const res = await api.get("/user");
+      if (!user?.id) return [];
+      const res = await api.get(`/user/${user.id}`);
       return res.data;
     },
     joinActivity, 
