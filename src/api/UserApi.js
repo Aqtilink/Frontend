@@ -44,14 +44,16 @@ export function useUserApi() {
     },
 
     sendFriendRequest: async (receiverId) => {
-      const base = (import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users").replace(/\/users$/, "");
-        const token = await getToken({ template: "default" });
-        const res = await axios.post(
-        `${base}/friend-requests/send?receiverClerkId=${receiverId}`,
-        null,
+      const token = await getToken({ template: "default" });
+      // Use base config to construct the URL correctly
+      const baseUrl = import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users";
+      const friendRequestsUrl = baseUrl.replace(/\/users$/, "/friend-requests");
+      const res = await axios.post(
+        `${friendRequestsUrl}/send?receiverClerkId=${receiverId}`,
+        {},
         {
           headers: {
-                Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`
           }
         }
       );

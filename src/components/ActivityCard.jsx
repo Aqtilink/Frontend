@@ -5,7 +5,7 @@ import { useState } from "react";
 export default function ActivityCard({ activity, currentUserId, onJoin }) {
   const isOwner = activity.ownerId === currentUserId;
   const participants = Array.isArray(activity.participants) ? activity.participants : [];
-  const alreadyJoined = participants.some(p => p.id === currentUserId) || isOwner;
+  const alreadyJoined = participants.includes(currentUserId) || isOwner;
   const isPast = new Date(activity.startTime) < new Date();
 
   const [showParticipants, setShowParticipants] = useState(false);
@@ -35,7 +35,10 @@ export default function ActivityCard({ activity, currentUserId, onJoin }) {
           Participants: {participants.length}
           {showParticipants && (
             <div className="participants-popup">
-              {participants.map(p => `${p.firstName} ${p.lastName}`).join(", ")}
+              {participants.length > 0 
+                ? participants.map(p => typeof p === 'string' ? p : `${p.firstName || ''} ${p.lastName || ''}`.trim()).join(", ")
+                : "No participants"
+              }
             </div>
           )}
         </div>
