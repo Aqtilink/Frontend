@@ -69,7 +69,9 @@ export default function Friends() {
       setSearchResults(results => results.filter(u => u.id !== userId));
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (err) {
-      setError("Failed to send friend request.");
+      console.error("Send friend request error:", err.response?.data || err.message);
+      const errorMsg = err.response?.data?.message || err.message || "Failed to send friend request.";
+      setError(errorMsg);
     }
   };
 

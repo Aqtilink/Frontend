@@ -48,16 +48,23 @@ export function useUserApi() {
       // Use base config to construct the URL correctly
       const baseUrl = import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users";
       const friendRequestsUrl = baseUrl.replace(/\/users$/, "/friend-requests");
-      const res = await axios.post(
-        `${friendRequestsUrl}/send?receiverClerkId=${receiverId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
+      const url = `${friendRequestsUrl}/send?receiverClerkId=${receiverId}`;
+      console.log("Sending friend request to:", url);
+      try {
+        const res = await axios.post(
+          url,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-        }
-      );
-      return res.data;
+        );
+        return res.data;
+      } catch (error) {
+        console.error("Friend request error:", error.response?.data || error.message);
+        throw error;
+      }
     },
 
     getPendingRequests: async () => {
