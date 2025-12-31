@@ -82,7 +82,7 @@ export default function FeedPage() {
           <ActivityCard
             key={activity.id}
             activity={activity}
-            currentUserId={user?.id}
+            currentUserId={user?.externalId}
             onJoin={handleJoin}
           />
         ))
