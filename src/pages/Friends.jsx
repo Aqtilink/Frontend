@@ -19,12 +19,15 @@ export default function Friends() {
         getFriends(),
         getPendingRequests()
       ]);
-      setFriends(friendsData);
-      setPendingRequests(pendingData);
+      // Ensure we have arrays
+      setFriends(Array.isArray(friendsData) ? friendsData : []);
+      setPendingRequests(Array.isArray(pendingData) ? pendingData : []);
     } catch (err) {
       console.error("Error loading friends data:", err);
       console.error("Error response:", err.response?.data);
       setError(`Could not load data: ${err.response?.data?.message || err.message || "Please try again."}`);
+      setFriends([]);
+      setPendingRequests([]);
     } finally {
       setLoading(false);
     }

@@ -29,10 +29,18 @@ export function useActivityApi() {
     if (!user?.id) return [];
     try {
       const res = await api.get(`/friends-feed/${user.id}`);
+      // For now, friends-feed returns all activities
+      // TODO: implement proper friend filtering
       return Array.isArray(res.data) ? res.data : [];
     } catch (error) {
       console.error("Error fetching friends feed:", error);
-      return [];
+      // Fall back to all activities if there's an error
+      try {
+        const res = await api.get("/all");
+        return Array.isArray(res.data) ? res.data : [];
+      } catch {
+        return [];
+      }
     }
   };
 
