@@ -10,9 +10,13 @@ export function useApi() {
   const { getToken } = useAuth();
 
   api.interceptors.request.use(async (config) => {
-    const token = await getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    try {
+      const token = await getToken({ template: "default" });
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (error) {
+      console.error("Failed to get token:", error);
     }
     return config;
   });

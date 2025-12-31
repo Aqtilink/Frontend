@@ -13,9 +13,9 @@ export default function Login() {
       gap: "2rem"
     }}>
       <div>
-        <h1 style={{ fontSize: "3rem", margin: "0 0 0.5rem 0", fontWeight: 800 }}>Ljubim te Nejci</h1>
+        <h1 style={{ fontSize: "3rem", margin: "0 0 0.5rem 0", fontWeight: 800 }}>Aqtilink</h1>
         <h2 style={{ fontSize: "1.5rem", margin: 0, fontWeight: 400, color: "#64748b" }}>
-          ZELO ZELO ZELO ZELO MUAH
+          From lazy people to lazy people to not be so lazy anymore.
         </h2>
       </div>
       <SignInButton mode="modal">

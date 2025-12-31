@@ -10,9 +10,13 @@ export function useUserApi() {
   });
 
   api.interceptors.request.use(async (config) => {
-    const token = await getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    try {
+      const token = await getToken({ template: "default" });
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (error) {
+      console.error("Failed to get token:", error);
     }
     return config;
   });
@@ -40,12 +44,13 @@ export function useUserApi() {
 
     sendFriendRequest: async (receiverId) => {
       const base = (import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users").replace(/\/users$/, "");
-      const res = await axios.post(
+        const token = await getToken({ template: "default" });
+        const res = await axios.post(
         `${base}/friend-requests/send?receiverClerkId=${receiverId}`,
         null,
         {
           headers: {
-            Authorization: `Bearer ${await getToken()}`
+                Authorization: `Bearer ${token}`
           }
         }
       );
@@ -54,11 +59,12 @@ export function useUserApi() {
 
     getPendingRequests: async () => {
       const base = (import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users").replace(/\/users$/, "");
-      const res = await axios.get(
+        const token = await getToken({ template: "default" });
+        const res = await axios.get(
         `${base}/friend-requests/pending`,
         {
           headers: {
-            Authorization: `Bearer ${await getToken()}`
+                Authorization: `Bearer ${token}`
           }
         }
       );
@@ -67,12 +73,13 @@ export function useUserApi() {
 
     acceptFriendRequest: async (requestId) => {
       const base = (import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users").replace(/\/users$/, "");
-      await axios.post(
+        const token = await getToken({ template: "default" });
+        await axios.post(
         `${base}/friend-requests/${requestId}/accept`,
         null,
         {
           headers: {
-            Authorization: `Bearer ${await getToken()}`
+                Authorization: `Bearer ${token}`
           }
         }
       );
@@ -80,12 +87,13 @@ export function useUserApi() {
 
     rejectFriendRequest: async (requestId) => {
       const base = (import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users").replace(/\/users$/, "");
-      await axios.post(
+        const token = await getToken({ template: "default" });
+        await axios.post(
         `${base}/friend-requests/${requestId}/reject`,
         null,
         {
           headers: {
-            Authorization: `Bearer ${await getToken()}`
+                Authorization: `Bearer ${token}`
           }
         }
       );
