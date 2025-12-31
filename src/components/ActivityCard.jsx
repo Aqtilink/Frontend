@@ -36,7 +36,14 @@ export default function ActivityCard({ activity, currentUserId, onJoin }) {
           {showParticipants && (
             <div className="participants-popup">
               {participants.length > 0 
-                ? participants.map(p => typeof p === 'string' ? p : `${p.firstName || ''} ${p.lastName || ''}`.trim()).join(", ")
+                ? participants.map(p => {
+                    if (typeof p === 'string') {
+                      // Extract user identifier from clerkId (format: user_xxxxx)
+                      const parts = p.split('_');
+                      return parts.length > 1 ? parts[1].substring(0, 8) : p.substring(0, 8);
+                    }
+                    return `${p.firstName || ''} ${p.lastName || ''}`.trim();
+                  }).join(", ")
                 : "No participants"
               }
             </div>
