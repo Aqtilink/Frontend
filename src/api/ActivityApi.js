@@ -21,13 +21,19 @@ export function useActivityApi() {
   
   const getFeed = async () => {
     const res = await api.get("/all");
-    return res.data;
+    // Ensure we always return an array
+    return Array.isArray(res.data) ? res.data : [];
   }
 
   const getFriendsFeed = async () => {
     if (!user?.id) return [];
-    const res = await api.get(`/friends-feed/${user.id}`);
-    return res.data;
+    try {
+      const res = await api.get(`/friends-feed/${user.id}`);
+      return Array.isArray(res.data) ? res.data : [];
+    } catch (error) {
+      console.error("Error fetching friends feed:", error);
+      return [];
+    }
   };
 
   const joinActivity = async (activityId) => {
@@ -40,9 +46,17 @@ export function useActivityApi() {
     const activityPayload = {
       ...payload,
       ownerId: user.id,
+      participants: [], // Initialize as empty array
     };
-    const res = await api.post("/json", activityPayload);
-    return res.data;
+    try {
+      const res = await api.post("/json", activityPayload);
+      return res.data;
+    } catch (error) {
+      console.error("Error creating activity:", error);
+      // Even if response fails, the activity was likely created
+      // since it appears in the feed
+      throw error;
+    }
   };
 
   return { 
@@ -50,13 +64,23 @@ export function useActivityApi() {
     getFriendsFeed,
     getJoinedActivities: async () => {
       if (!user?.id) return [];
-      const res = await api.get(`/joined/${user.id}`);
-      return res.data;
+      try {
+        const res = await api.get(`/joined/${user.id}`);
+        return Array.isArray(res.data) ? res.data : [];
+      } catch (error) {
+        console.error("Error fetching joined activities:", error);
+        return [];
+      }
     },
     getUserActivities: async () => {
       if (!user?.id) return [];
-      const res = await api.get(`/user/${user.id}`);
-      return res.data;
+      try {
+        const res = await api.get(`/user/${user.id}`);
+        return Array.isArray(res.data) ? res.data : [];
+      } catch (error) {
+        console.error("Error fetching user activities:", error);
+        return [];
+      }
     },
     joinActivity, 
     createActivity

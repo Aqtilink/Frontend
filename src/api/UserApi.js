@@ -34,7 +34,8 @@ export function useUserApi() {
 
     getFriends: async () => {
       const res = await api.get(`/me/friends`);
-      return res.data;
+      // Ensure we always return an array
+      return Array.isArray(res.data) ? res.data : [];
     },
 
     searchUsers: async (query) => {
