@@ -3,6 +3,7 @@ import { useAuth } from "@clerk/clerk-react";
 
 export function useUserApi() {
   const { getToken } = useAuth();
+  const tokenTemplate = import.meta.env.VITE_CLERK_TOKEN_TEMPLATE;
 
   const api = axios.create({
     baseURL:
@@ -11,7 +12,9 @@ export function useUserApi() {
 
   api.interceptors.request.use(async (config) => {
     try {
-      const token = await getToken({ template: "default" });
+      const token = await getToken(
+        tokenTemplate ? { template: tokenTemplate } : undefined
+      );
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -44,7 +47,9 @@ export function useUserApi() {
     },
 
     sendFriendRequest: async (receiverId) => {
-      const token = await getToken({ template: "default" });
+      const token = await getToken(
+        tokenTemplate ? { template: tokenTemplate } : undefined
+      );
       // Use base config to construct the URL correctly
       const baseUrl = import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users";
       const friendRequestsUrl = baseUrl.replace(/\/users$/, "/friend-requests");
@@ -69,7 +74,9 @@ export function useUserApi() {
 
     getPendingRequests: async () => {
       const base = (import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users").replace(/\/users$/, "");
-        const token = await getToken({ template: "default" });
+        const token = await getToken(
+          tokenTemplate ? { template: tokenTemplate } : undefined
+        );
         const res = await axios.get(
         `${base}/friend-requests/pending`,
         {
@@ -83,7 +90,9 @@ export function useUserApi() {
 
     acceptFriendRequest: async (requestId) => {
       const base = (import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users").replace(/\/users$/, "");
-        const token = await getToken({ template: "default" });
+        const token = await getToken(
+          tokenTemplate ? { template: tokenTemplate } : undefined
+        );
         await axios.post(
         `${base}/friend-requests/${requestId}/accept`,
         null,
@@ -97,7 +106,9 @@ export function useUserApi() {
 
     rejectFriendRequest: async (requestId) => {
       const base = (import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users").replace(/\/users$/, "");
-        const token = await getToken({ template: "default" });
+        const token = await getToken(
+          tokenTemplate ? { template: tokenTemplate } : undefined
+        );
         await axios.post(
         `${base}/friend-requests/${requestId}/reject`,
         null,

@@ -8,10 +8,13 @@ const api = axios.create({
 
 export function useApi() {
   const { getToken } = useAuth();
+  const tokenTemplate = import.meta.env.VITE_CLERK_TOKEN_TEMPLATE;
 
   api.interceptors.request.use(async (config) => {
     try {
-      const token = await getToken({ template: "default" });
+      const token = await getToken(
+        tokenTemplate ? { template: tokenTemplate } : undefined
+      );
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

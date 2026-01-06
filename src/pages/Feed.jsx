@@ -4,7 +4,7 @@ import { useActivityApi } from "../api/ActivityApi";
 import { useUser } from "@clerk/clerk-react";
 
 export default function FeedPage() {
-  const { getFeed, getFriendsFeed, getJoinedActivities, getUserActivities, joinActivity } = useActivityApi();
+  const { getFeed, getFriendsFeed, getJoinedActivities, getUserActivities, joinActivity, deleteActivity } = useActivityApi();
   const { user } = useUser();
   const [activities, setActivities] = useState([]);
   const [activeFilter, setActiveFilter] = useState("all");
@@ -33,6 +33,11 @@ export default function FeedPage() {
 
   const handleJoin = async (activityId) => {
     await joinActivity(activityId);
+    loadFeed();
+  };
+
+  const handleDelete = async (activityId) => {
+    await deleteActivity(activityId);
     loadFeed();
   };
 
@@ -82,8 +87,9 @@ export default function FeedPage() {
           <ActivityCard
             key={activity.id}
             activity={activity}
-            currentUserId={user?.externalId}
+            currentUserId={user?.id}
             onJoin={handleJoin}
+            onDelete={handleDelete}
           />
         ))
       )}

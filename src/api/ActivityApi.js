@@ -67,6 +67,11 @@ export function useActivityApi() {
     }
   };
 
+  const deleteActivity = async (activityId) => {
+    if (!user?.id) throw new Error("User not authenticated");
+    await api.delete(`/${activityId}`);
+  };
+
   return { 
     getFeed, 
     getFriendsFeed,
@@ -91,7 +96,8 @@ export function useActivityApi() {
       }
     },
     joinActivity, 
-    createActivity
+    createActivity,
+    deleteActivity
      
   };
 }
