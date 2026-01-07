@@ -18,7 +18,7 @@ export default function ActivityCard({ activity, currentUserId, onJoin, onDelete
       const name = `${activity.owner.firstName || ""} ${activity.owner.lastName || ""}`.trim();
       if (name.length > 0) return name;
     }
-    if (activity.ownerName) return activity.ownerName; // backward compatibility
+    if (activity.ownerName) return activity.ownerName;
     return "Unknown";
   })();
 

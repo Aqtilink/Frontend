@@ -21,7 +21,6 @@ export function useActivityApi() {
   
   const getFeed = async () => {
     const res = await api.get("/all");
-    // Ensure we always return an array
     return Array.isArray(res.data) ? res.data : [];
   }
 
@@ -29,12 +28,9 @@ export function useActivityApi() {
     if (!user?.id) return [];
     try {
       const res = await api.get(`/friends-feed/${user.id}`);
-      // For now, friends-feed returns all activities
-      // TODO: implement proper friend filtering
       return Array.isArray(res.data) ? res.data : [];
     } catch (error) {
       console.error("Error fetching friends feed:", error);
-      // Fall back to all activities if there's an error
       try {
         const res = await api.get("/all");
         return Array.isArray(res.data) ? res.data : [];
@@ -54,15 +50,13 @@ export function useActivityApi() {
     const activityPayload = {
       ...payload,
       ownerId: user.id,
-      participants: [], // Initialize as empty array
+      participants: [],
     };
     try {
       const res = await api.post("/json", activityPayload);
       return res.data;
     } catch (error) {
       console.error("Error creating activity:", error);
-      // Even if response fails, the activity was likely created
-      // since it appears in the feed
       throw error;
     }
   };

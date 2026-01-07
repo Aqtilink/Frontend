@@ -19,7 +19,6 @@ export default function Friends() {
         getFriends(),
         getPendingRequests()
       ]);
-      // Ensure we have arrays
       setFriends(Array.isArray(friendsData) ? friendsData : []);
       setPendingRequests(Array.isArray(pendingData) ? pendingData : []);
     } catch (err) {
@@ -48,7 +47,6 @@ export default function Friends() {
     setError("");
     try {
       const results = await searchUsers(searchQuery);
-      // Filter out already friends and self
       const friendIds = friends.map(f => f.id);
       const filtered = results.filter(user => !friendIds.includes(user.id));
       setSearchResults(filtered);
@@ -65,7 +63,6 @@ export default function Friends() {
     try {
       await sendFriendRequest(userId);
       setSuccessMessage("Friend request sent!");
-      // Remove from search results
       setSearchResults(results => results.filter(u => u.id !== userId));
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (err) {
@@ -110,7 +107,6 @@ export default function Friends() {
       {error && <p style={{ color: "#b91c1c", marginBottom: "1rem" }}>{error}</p>}
       {successMessage && <p style={{ color: "#16a34a", marginBottom: "1rem" }}>{successMessage}</p>}
 
-      {/* Search Section */}
       <div style={{ marginBottom: "2rem", padding: "1.5rem", background: "#f8fafc", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
         <h3 style={{ marginBottom: "1rem", fontSize: "1.1rem" }}>Search Users</h3>
         <form onSubmit={handleSearch} style={{ display: "flex", gap: "0.5rem" }}>
@@ -186,7 +182,6 @@ export default function Friends() {
         )}
       </div>
 
-      {/* Pending Requests Section */}
       {pendingRequests.length > 0 && (
         <div style={{ marginBottom: "2rem", padding: "1.5rem", background: "#fef3c7", borderRadius: "12px", border: "1px solid #fbbf24" }}>
           <h3 style={{ marginBottom: "1rem", fontSize: "1.1rem" }}>Pending Friend Requests ({pendingRequests.length})</h3>
@@ -244,7 +239,6 @@ export default function Friends() {
         </div>
       )}
 
-      {/* Friends List Section */}
       <div style={{ padding: "1.5rem", background: "#f0fdf4", borderRadius: "12px", border: "1px solid #86efac" }}>
         <h3 style={{ marginBottom: "1rem", fontSize: "1.1rem" }}>Your Friends ({friends.length})</h3>
         {friends.length === 0 ? (

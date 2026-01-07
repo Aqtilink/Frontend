@@ -37,7 +37,6 @@ export function useUserApi() {
 
     getFriends: async () => {
       const res = await api.get(`/me/friends`);
-      // Ensure we always return an array
       return Array.isArray(res.data) ? res.data : [];
     },
 
@@ -50,7 +49,6 @@ export function useUserApi() {
       const token = await getToken(
         tokenTemplate ? { template: tokenTemplate } : undefined
       );
-      // Use base config to construct the URL correctly
       const baseUrl = import.meta.env.VITE_USER_API_URL || "http://localhost:8080/api/v1/users";
       const friendRequestsUrl = baseUrl.replace(/\/users$/, "/friend-requests");
       const url = `${friendRequestsUrl}/send?receiverClerkId=${receiverId}`;

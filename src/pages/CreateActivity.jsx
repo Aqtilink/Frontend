@@ -30,7 +30,6 @@ export default function CreateActivity() {
         title: form.title.trim(),
         location: form.location.trim(),
         sportType: form.sportType,
-        // send the local datetime string; backend maps to LocalDateTime
         startTime: form.startTime,
       };
 

@@ -48,7 +48,6 @@ export default function Settings() {
     const payload = {
       firstName: (draft.firstName?.trim() || profile?.firstName || ""),
       lastName: (draft.lastName?.trim() || profile?.lastName || ""),
-      // keep existing age if input is empty
       age: draft.age !== "" && draft.age !== null && draft.age !== undefined
         ? Number(draft.age)
         : (profile?.age ?? 0),
