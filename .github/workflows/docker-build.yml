@@ -37,3 +37,18 @@ jobs:
             ${{ secrets.DOCKER_HUB_USERNAME }}/aqtilink-frontend:${{ github.sha }}
           cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/aqtilink-frontend:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/aqtilink-frontend:buildcache,mode=max
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+      
+      - name: Configure kubectl
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+      
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl rollout restart deployment/frontend -n aqtilink
+          kubectl rollout status deployment/frontend -n aqtilink --timeout=5m
